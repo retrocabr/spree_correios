@@ -24,4 +24,5 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'rspec-rails',  '~> 2.7'
   s.add_development_dependency 'shoulda-matchers',  '1.1.0'
   s.add_development_dependency 'sqlite3'
+  s.add_development_dependency 'fakeweb'
 end

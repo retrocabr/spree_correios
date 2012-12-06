@@ -3,6 +3,11 @@ ENV["RAILS_ENV"] = "test"
 
 require File.expand_path("../dummy/config/environment.rb",  __FILE__)
 
+Correios::Frete.configure do |config|
+  config.logger = Rails.logger
+  # config.log_level = Rails.logger.log_level
+end
+
 require 'rspec/rails'
 
 require_relative 'support/fakeweb'

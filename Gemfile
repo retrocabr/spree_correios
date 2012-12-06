@@ -6,6 +6,7 @@ group :test do
   gem 'simplecov', require: false
   gem 'guard-rspec'
   gem 'growl'
+  gem 'fakeweb'
 end
 
 if RUBY_VERSION < "1.9"

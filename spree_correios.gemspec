@@ -10,8 +10,12 @@ Gem::Specification.new do |s|
   s.email       = ["stefano.diem@gmail.com"]
   s.homepage    = "http://github.com/heavenstudio/spree_correios"
 
-  s.files         = `git ls-files`.split("\n")
-  s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
+  s.test_files  = Dir['spec/**/*.rb'] - Dir['spec/dummy/**/*.rb']
+  s.test_files += ['Guardfile']
+  s.files       = Dir['app/**/*.rb', 'lib/**/*.rb', 'config/**/*']
+  s.files      += ['Gemfile', 'Gemfile.lock', 'Rakefile',
+                   'LICENSE', 'README.md']
+
   s.require_path = 'lib'
   s.requirements << 'none'
 

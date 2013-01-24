@@ -10,7 +10,8 @@ module SpreeCorreios
         .shipping_methods += [Spree::Calculator::PAC,
                               Spree::Calculator::SEDEX,
                               Spree::Calculator::SEDEX10,
-                              Spree::Calculator::ESEDEX]
+                              Spree::Calculator::ESEDEX,
+                              Spree::Calculator::Bogus]
     end
 
     # use rspec for tests

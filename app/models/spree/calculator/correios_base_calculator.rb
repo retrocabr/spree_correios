@@ -6,11 +6,16 @@ module Spree
     preference :declared_value, :boolean, default: false
     preference :receipt_notification, :boolean, default: false
     preference :receive_in_hands, :boolean, default: false
+    preference :fallback_amount, :string
+    preference :fallback_timing, :string
+    preference :default_box_price, :string
 
     attr_reader :delivery_time
     attr_accessible :preferred_zipcode, :preferred_token,
                     :preferred_password, :preferred_declared_value,
-                    :preferred_receipt_notification, :preferred_receive_in_hands
+                    :preferred_receipt_notification, :preferred_receive_in_hands, 
+                    :preferred_fallback_amount, :preferred_default_box_price,
+                    :preferred_fallback_timing
 
     def compute(object)
       return unless object.present? and object.line_items.present?
@@ -18,13 +23,15 @@ module Spree
       order      = object.is_a?(Spree::Order) ? object : object.order
       package    = package_from_order(order)
       calculator = calculator_for_package_of_order(package, order)
-      webservice = calculator.calculate(shipping_method)
-
-      return 0.0 if webservice.erro?
+      
+      begin
+         webservice = calculator.calculate(shipping_method)
+      rescue
+        webservice = OpenStruct.new(valor: prefers?(:fallback_amount).to_f, prazo_entrega: prefers?(:fallback_timing))
+      end
 
       @delivery_time = webservice.prazo_entrega
-      webservice.valor
-    rescue 0.0 # TODO: log webservice errors or let exceptions goes up
+      webservice.valor +  prefers?(:default_box_price).to_f
     end
 
     def available?(order)

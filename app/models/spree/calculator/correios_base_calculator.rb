@@ -46,9 +46,9 @@ module Spree
       ::Correios::Frete::Pacote.new.tap do |package|
         order.line_items.map do |item|
           weight = item.product.weight.to_f
-          depth  = item.product.depth.to_f
-          width  = item.product.width.to_f
-          height = item.product.height.to_f
+          depth  = 15.0
+          width  = 15.0
+          height = 5.0
           package_item = ::Correios::Frete::PacoteItem.new(peso: weight, comprimento: depth, largura: width, altura: height)
           package.add_item(package_item)
         end

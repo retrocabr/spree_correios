@@ -9,13 +9,14 @@ module Spree
     preference :fallback_amount, :string
     preference :fallback_timing, :string
     preference :default_box_price, :string
+    preference :package_weight, :string
 
     attr_reader :delivery_time
     attr_accessible :preferred_zipcode, :preferred_token,
                     :preferred_password, :preferred_declared_value,
                     :preferred_receipt_notification, :preferred_receive_in_hands, 
                     :preferred_fallback_amount, :preferred_default_box_price,
-                    :preferred_fallback_timing
+                    :preferred_fallback_timing, :preferred_package_weight
 
     def compute(object)
       return unless object.present? and object.line_items.present?
@@ -44,12 +45,13 @@ module Spree
     end
 
     def package_from_order(order)
+      depth  = 15.0
+      width  = 15.0
+      height = 5.0
+      items = order.line_items
       ::Correios::Frete::Pacote.new.tap do |package|
-        order.line_items.map do |item|
-          weight = item.product.weight.to_f
-          depth  = 15.0
-          width  = 15.0
-          height = 5.0
+        items.map do |item|
+          weight = item.product.weight.to_f + prefers?(:package_weight).to_f/items.size # package weight
           package_item = ::Correios::Frete::PacoteItem.new(peso: weight, comprimento: depth, largura: width, altura: height)
           package.add_item(package_item)
         end

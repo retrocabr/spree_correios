@@ -11,7 +11,7 @@ module Spree
     preference :default_box_price, :string
     preference :package_weight, :string
 
-    attr_reader :delivery_time
+    attr_accessor :delivery_time
     attr_accessible :preferred_zipcode, :preferred_token,
                     :preferred_password, :preferred_declared_value,
                     :preferred_receipt_notification, :preferred_receive_in_hands, 
@@ -34,6 +34,10 @@ module Spree
       @delivery_time = webservice.prazo_entrega
       cost = webservice.valor == 0 ? prefers?(:fallback_amount).to_f : webservice.valor
       cost + prefers?(:default_box_price).to_f
+    end
+    
+    def delivery_time
+      @delivery_time || prefers?(:fallback_timing)
     end
 
     def available?(order)

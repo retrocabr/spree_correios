@@ -32,8 +32,8 @@ module Spree
       end
 
       @delivery_time = webservice.prazo_entrega
-      cost = webservice.valor == 0 ? prefers?(:fallback_amount).to_f : webservice.valor
-      cost + prefers?(:default_box_price).to_f
+      cost = webservice.valor
+      cost > 0 ? cost + prefers?(:default_box_price).to_f : 0
     end
     
     def delivery_time

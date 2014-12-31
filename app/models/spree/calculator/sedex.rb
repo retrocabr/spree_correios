@@ -19,5 +19,10 @@ module Spree
         40010
       end
     end
+    
+    def service_id
+      104625
+    end
+    
   end
 end

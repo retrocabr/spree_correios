@@ -11,6 +11,10 @@ module Spree
     def shipping_code
       81019
     end
+    
+    def service_id
+      104672
+    end
 
     # TODO: define an custom exception for absense of contract
     def compute(object)

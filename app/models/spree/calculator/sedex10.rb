@@ -11,5 +11,10 @@ module Spree
     def shipping_code
       40215
     end
+    
+    def service_id
+      104707
+    end  
+  
   end
 end

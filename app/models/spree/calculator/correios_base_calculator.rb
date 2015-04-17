@@ -56,7 +56,7 @@ module Spree
       items = order.line_items
       ::Correios::Frete::Pacote.new.tap do |package|
         items.map do |item|
-          extra_weight = order.respond_to?(:extra_weight) ? order.extra_weight : 0
+          extra_weight = order.respond_to?(:extra_weight) && order.extra_weight ? order.extra_weight : 0
           weight = item.product.weight.to_f + prefers?(:package_weight).to_f/items.size + extra_weight
           package_item = ::Correios::Frete::PacoteItem.new(peso: weight, comprimento: depth, largura: width, altura: height)
           package.add_item(package_item)

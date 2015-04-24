@@ -69,7 +69,7 @@ module Spree
         c.encomenda         = package
 
         c.cep_origem        = preferred_zipcode
-        c.cep_destino       = order.ship_address.zipcode
+        c.cep_destino       = order.ship_address.zipcode unless order.ship_address.nil?
         c.valor_declarado   = order.amount.to_f  if prefers?(:declared_value)
 
         c.codigo_empresa    = preferred_token    if preferred_token.present?

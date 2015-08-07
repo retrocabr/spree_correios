@@ -10,13 +10,15 @@ module Spree
     preference :fallback_timing, :string
     preference :default_box_price, :string
     preference :package_weight, :string
+    preference :shipment_discount, :integer, default: 0
 
     attr_accessor :delivery_time
     attr_accessible :preferred_zipcode, :preferred_token,
                     :preferred_password, :preferred_declared_value,
                     :preferred_receipt_notification, :preferred_receive_in_hands, 
                     :preferred_fallback_amount, :preferred_default_box_price,
-                    :preferred_fallback_timing, :preferred_package_weight
+                    :preferred_fallback_timing, :preferred_package_weight,
+                    :preferred_shipment_discount
 
     def compute(object)
       return unless object.present? and object.line_items.present?
@@ -34,6 +36,7 @@ module Spree
       @delivery_time = webservice.prazo_entrega
       cost = webservice.valor
       cost > 0 ? cost + prefers?(:default_box_price).to_f : 0
+      cost = cost * (1 - prefers?(:shipment_discount).to_f / 100) if prefers?(:shipment_discount) > 0
     end
     
     def delivery_time

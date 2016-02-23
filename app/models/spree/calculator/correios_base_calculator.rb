@@ -34,7 +34,8 @@ module Spree
       @delivery_time = webservice.prazo_entrega
       cost = webservice.valor
       cost = cost > 0 ? (cost + prefers?(:default_box_price).to_f) : 0
-      cost * (1 - Spree::Config[:shipping_discount].to_f)
+      #cost * (1 - Spree::Config[:shipping_discount].to_f)
+      return cost
     end
     
     def delivery_time
@@ -42,7 +43,7 @@ module Spree
     end
 
     def available?(order)
-      #!compute(order).zero? #requisição repetida ao Webservice dos Correios quando order.rate_hash é chamado (available_shipping_methods & cost = calculator.compute) 
+      #!compute(order).zero? #requisição repetida ao Webservice dos Correios quando order.rate_hash é chamado (available_shipping_methods & cost = calculator.compute)
       true
     end
 

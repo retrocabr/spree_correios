@@ -8,7 +8,11 @@ module Spree
       :bogus
     end
 
-    def compute(object)
+    def compute_package(object)
+      1
+    end
+
+    def compute_order(object)
       1
     end
   end

@@ -17,4 +17,4 @@ end
 
 gemspec
 
-gem 'spree', git: 'https://github.com/spree/spree.git', branch: '1-0-stable'
+gem 'spree', '~> 3.1.0'

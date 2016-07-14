@@ -1,5 +1,5 @@
 module Spree
-  class Calculator::CorreiosBaseCalculator < Calculator
+  class Calculator::CorreiosBaseCalculator < Spree::ShippingCalculator
     preference :zipcode, :string
     preference :token, :string
     preference :password, :string
@@ -12,19 +12,22 @@ module Spree
     preference :package_weight, :string
 
     attr_accessor :delivery_time
-    attr_accessible :preferred_zipcode, :preferred_token,
-                    :preferred_password, :preferred_declared_value,
-                    :preferred_receipt_notification, :preferred_receive_in_hands, 
-                    :preferred_fallback_amount, :preferred_default_box_price,
-                    :preferred_fallback_timing, :preferred_package_weight
+    # attr_accessible :preferred_zipcode, :preferred_token,
+    #                 :preferred_password, :preferred_declared_value,
+    #                 :preferred_receipt_notification, :preferred_receive_in_hands,
+    #                 :preferred_fallback_amount, :preferred_default_box_price,
+    #                 :preferred_fallback_timing, :preferred_package_weight
 
-    def compute(object)
-      return unless object.present? and object.line_items.present?
+    def compute_package(object)
+      return unless object.present?
+      if object.is_a?(Spree::Order)
+        return unless object.line_items.present?
+      end
 
       order      = object.is_a?(Spree::Order) ? object : object.order
       package    = package_from_order(order)
       calculator = calculator_for_package_of_order(package, order)
-      
+
       begin
          webservice = calculator.calculate(shipping_method)
       rescue
@@ -37,7 +40,11 @@ module Spree
       #cost * (1 - Spree::Config[:shipping_discount].to_f)
       return cost
     end
-    
+
+    def compute_order(object)
+      compute_package(object)
+    end
+
     def delivery_time
       @delivery_time || prefers?(:fallback_timing)
     end
@@ -81,5 +88,10 @@ module Spree
         c.aviso_recebimento = prefers?(:receipt_notification)
       end
     end
+
+    def prefers?(key)
+      preferences.has_key?(key) ? preferences[key] : nil
+    end
+
   end
 end
